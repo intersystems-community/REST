@@ -15,7 +15,7 @@ All logic related to the proceccing of http requests.</Description>
 <Method name="DispatchRequest">
 <Description><![CDATA[
 Dispatch a REST request according to URL and Method.<br>
-Add param Namespace to a request to execute MDX in desired namespace.]]></Description>
+Add param Namespace to a request to execute in desired namespace.]]></Description>
 <Internal>1</Internal>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pUrl:%String,pMethod:%String</FormalSpec>
@@ -251,7 +251,7 @@ Issue an '500' error and give some indication as to what occurred.<br>
 
 <Method name="CheckNamespace">
 <Description><![CDATA[
-Returns OK if namespace both exists and contains MDX2JSON package.<br>
+Returns OK if namespace both exists and contains isc package.<br>
 <b>Namespace</b> - name of namespace. Sets namespace variable to current namespace if empty or missing.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec><![CDATA[&Namespace:%String=$Namespace]]></FormalSpec>
@@ -267,9 +267,9 @@ Returns OK if namespace both exists and contains MDX2JSON package.<br>
 	if Namespace'=$Namespace {
         set oldNS = $Namespace
         zn Namespace
-        set exists = ##class(%Dictionary.CompiledClass).%ExistsId("MDX2JSON.Utils") 
+        set exists = ##class(%Dictionary.CompiledClass).%ExistsId("isc.REST") 
         zn oldNS
-        return:(exists=0) $$$ERROR($$$GeneralError, "MDX2JSON package is not mapped to " _ Namespace)		
+        return:(exists=0) $$$ERROR($$$GeneralError, "isc.REST package is not mapped to " _ Namespace)		
 	}
 	
 	return $$$OK
@@ -299,7 +299,7 @@ This project creates the DispatchMethod used to dispatch the Url and Method to t
         Set tClassName=%classname
         
         #; Don't run on base class
-        If tClassName="MDX2JSON.AbstractREST" Quit
+        If tClassName="isc.AbstractREST" Quit
        
         #; Find named XDATA block
         If ##class(%Dictionary.CompiledXData).%ExistsId(tClassName_"||UrlMap") {
