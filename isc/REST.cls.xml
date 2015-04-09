@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Export generator="Cache" version="25">
+<Class name="isc.REST">
+<Description><![CDATA[
+Class for REST-like web api.<br>
+Logic related to request processing goes here.]]></Description>
+<IncludeCode>isc.REST</IncludeCode>
+<Super>isc.AbstractREST</Super>
+<TimeCreated>63165,65257.8179</TimeCreated>
+
+<XData name="UrlMap">
+<Data><![CDATA[
+<Routes>
+   <!-- Test method-->
+   <Route Url="/test" Method="GET" Call="Test"/>
+   <Route Url="/logout" Method="GET" Call="Logout"/>
+ </Routes>
+]]></Data>
+</XData>
+
+<Method name="Logout">
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+	#dim %session As %CSP.Session
+	set st = %session.Logout(1)
+	set %session.EndSession = 1
+	return st
+]]></Implementation>
+</Method>
+
+<Method name="Test">
+<Description><![CDATA[
+Test method, outputs <b>%request</b>, <b>%response</b> and <b>%session</b> objects. ]]></Description>
+<ClassMethod>1</ClassMethod>
+<ReturnType>%Status</ReturnType>
+<Implementation><![CDATA[
+    write "{""Status"": ""OK""}"
+    return $$$OK
+]]></Implementation>
+</Method>
+</Class>
+</Export>
