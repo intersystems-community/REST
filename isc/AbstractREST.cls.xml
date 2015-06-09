@@ -167,7 +167,7 @@ Validates incoming request body against Body Route attribute.</Description>
 <Implementation><![CDATA[
 	#dim %request As %CSP.Request
 	
-	return:(pMethod'="POST") $$$OK
+	return:((pMethod'="POST") && (pMethod'="PUT")) $$$OK
 	return:(pBody="") $$$OK
 	return:'$d(%request.Content.%data(pBody)) $$$ERROR($$$PropertyRequired,pBody)
 	return $$$OK
