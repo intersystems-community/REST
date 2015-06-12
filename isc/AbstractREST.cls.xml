@@ -8,6 +8,8 @@ All logic related to the proceccing of http requests.</Description>
 <TimeCreated>63572,78432.426689</TimeCreated>
 
 <Parameter name="UseSession">
+<Description>
+Session support</Description>
 <Type>Integer</Type>
 <Default>1</Default>
 </Parameter>
@@ -25,6 +27,7 @@ Add param Namespace to a request to execute in desired namespace.]]></Descriptio
 	#dim %request As %CSP.Request
 	#dim %session As %CSP.Session
 	
+	// CORS support
 	Do %response.SetHeader("Access-Control-Allow-Origin",..GetOrigins())
 	Do %response.SetHeader("Access-Control-Allow-Credentials","true")
 	Do %response.SetHeader("Access-Control-Allow-Methods","GET, PUT, POST, DELETE, OPTIONS")
@@ -33,7 +36,8 @@ Add param Namespace to a request to execute in desired namespace.]]></Descriptio
 	
 	Set %response.CharSet = "utf-8"
 	Set %response.ContentType="application/json"
-
+	
+	// Determine language
 	Set %session.Language=$$MatchLanguage^%occMessages(%request.GetCgiEnv("HTTP_ACCEPT_LANGUAGE"),"%CSP","+s") // Localization support
 	Set %response.Language=%session.Language
     
@@ -49,10 +53,14 @@ Add param Namespace to a request to execute in desired namespace.]]></Descriptio
     
     Try {
 	    
+	    // Convert request body, if any, from json to %ZEN.proxyObject
+	    // If json contains _class property, json would be converted into
+	    // an instance of _class value 
 	    Set st = ..ConvertRequestBody()
 	    If $$$ISERR(st) Do ..Http500(st) Quit
 	    
 	    // Desired execusion namespace
+	    // Check that it's availible
 	    Set Namespace = $get(%request.Data("Namespace",1))
 	    Set st = ..CheckNamespace(.Namespace)
 	    If $$$ISERR(st) Do ..Http500(st) Quit
@@ -124,7 +132,7 @@ Add param Namespace to a request to execute in desired namespace.]]></Descriptio
                 Set tSC = ..ValidateRequest(pMethod,tBody)
                 If $$$ISERR(tSC) Do ..Http500(tSC) Quit
                 
-                #; Dispatch                
+                #; Dispatch in correct namespace               
                 If (Namespace'=$Namespace) {
                     Set oldNS = $Namespace
                     zn Namespace
@@ -160,7 +168,8 @@ Add param Namespace to a request to execute in desired namespace.]]></Descriptio
 
 <Method name="ValidateRequest">
 <Description>
-Validates incoming request body against Body Route attribute.</Description>
+Validates incoming request body against Body Route attribute.
+pMethod - is HTTP method: GET, POST, PUT, DELETE </Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pMethod:%String,pBody:%String=""</FormalSpec>
 <ReturnType>%Status</ReturnType>
@@ -176,7 +185,9 @@ Validates incoming request body against Body Route attribute.</Description>
 
 <Method name="ConvertRequestBody">
 <Description>
-Converts request into UTF8. Converts request into proxyObject. </Description>
+Converts request body into UTF8. Converts request into %XEN.proxyObject. 
+If json contains _class property, json would be converted into an 
+instance of _class value </Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
