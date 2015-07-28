@@ -250,6 +250,7 @@ Issue an '500' error and give some indication as to what occurred.<br>
 <b>pStatus</b> - %status, not %Exception.AbstractException.]]></Description>
 <ClassMethod>1</ClassMethod>
 <FormalSpec>pStatus:%Exception.AbstractException</FormalSpec>
+<ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
     // we are expecting status
     #; Set the response Http status
@@ -257,6 +258,8 @@ Issue an '500' error and give some indication as to what occurred.<br>
     
     #; Return a helpful error string
     Write "{""Error"":"_$$$ZENJSSTR($System.Status.GetErrorText(pStatus,%session.Language))_"}"
+    
+    Quit $$$OK
 ]]></Implementation>
 </Method>
 
