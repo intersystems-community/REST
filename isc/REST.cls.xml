@@ -19,6 +19,8 @@ Logic related to request processing goes here.]]></Description>
 </XData>
 
 <Method name="Logout">
+<Description>
+End session</Description>
 <ClassMethod>1</ClassMethod>
 <ReturnType>%Status</ReturnType>
 <Implementation><![CDATA[
